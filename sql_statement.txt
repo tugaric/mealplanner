@@ -1,0 +1,3 @@
+Select "meal name", ingredient.description from 
+(SELECT "meal composition".ingredient as ing, meal.Description as "meal name" from "meal composition" join meal where meal.ID = 1) join
+ingredient where ingredient.ID = ing
