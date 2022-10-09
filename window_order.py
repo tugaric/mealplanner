@@ -1,4 +1,7 @@
 import tkinter as tk
+import sqlite3
+import get_sql_data as meal_db
+from PIL import Image, ImageTk
 from tkinter import ttk
 
 class app(tk.Tk):
@@ -12,8 +15,6 @@ class app(tk.Tk):
 # Menubar
         menubar = tk.Menu(container)
         filemenu = tk.Menu(menubar, tearoff=0)
-        filemenu.add_command(label="Save settings", command = lambda: popupmsg("Not supported just yet!"))
-        filemenu.add_separator()
         filemenu.add_command(label="Exit", command=quit)
         menubar.add_cascade(label="File", menu=filemenu)
         tk.Tk.config(self, menu=menubar)
@@ -32,17 +33,25 @@ class app(tk.Tk):
 class first(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
-    # Treeview
+        # meal_list: A list of all the meals in the database
+        # meal_ingredient: ingredients of the meal
+        meals = meal_db.get_meals()
+    
+    # Treeview heading and column configuration
         columns = ("ingredient")
-
         my_tree = ttk.Treeview(self, columns=columns)
+        # Configure heading names
         my_tree.heading("#0", text="meal")
         my_tree.heading("ingredient", text="ingredient")
+        # configure column width
+        my_tree.column("#0", width=150)
         
-        # returns the id of this row
-        meal_row = my_tree.insert(parent="", index=tk.END, text="Pizza")
-        my_tree.insert(meal_row, index=tk.END, values=("cheese",))
-        my_tree.insert(meal_row, index=tk.END, values=("tomato sauce",))
+    # returns the id of this row
+        for meal in meals:        # List[Tuple] => meal_ingredient = [("spaghetti", "pasta"), ("spaghetti", "haché"), ...
+            meal_row = my_tree.insert(parent="", index=tk.END, text=meal.meal_name)
+            for ingredient in meal.meal_ingredients:
+                my_tree.insert(parent=meal_row, index=tk.END, values=(ingredient))
+    # pack widget
         my_tree.pack()
 
 class second(tk.Frame):
