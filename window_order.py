@@ -62,6 +62,16 @@ class second(tk.Frame):
         my_button = tk.Button(self, text='Switch button', command=lambda: controller.switch_window(first))
         my_button.pack()
 
+# create a treeview inside of a frame
+class my_treeview(tk.Frame):
+    def __init__(self, parent, column_name):
+        super().__init__(parent)
+        # columns = column_name
+        self.tree = ttk.Treeview(self)
+        self.tree.heading("#0", text=column_name)
+        self.tree.pack()
+        self.pack()
+
 if __name__ == "__main__":
     root = app()
     root.geometry("600x400")
